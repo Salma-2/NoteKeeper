@@ -53,6 +53,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private SimpleCursorAdapter mAdapterCourses;
     private boolean mNotesQueryFinishid;
     private boolean mCourseQueryFinishid;
+    private Uri mNoteUri;
 
 
     @Override
@@ -215,18 +216,22 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     //insert in db
     private void createNewNote() {
         final ContentValues values = new ContentValues();
-        values.put( NoteInfoEntry.COLUMN_COURSE_ID, "" );
-        values.put( NoteInfoEntry.COLUMN_NOTE_TITLE, "" );
-        values.put( NoteInfoEntry.COLUMN_NOTE_TEXT, "" );
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-                mNoteId = (int) db.insert( NoteInfoEntry.TABLE_NAME, null, values );
-                return null;
-            }
-        };
-        task.execute();
+        values.put( Notes.COLUMN_COURSE_ID, "" );
+        values.put( Notes.COLUMN_NOTE_TITLE, "" );
+        values.put( Notes.COLUMN_NOTE_TEXT, "" );
+
+        mNoteUri = getContentResolver().insert( Notes.CONTENT_URI,values );
+
+
+//        AsyncTask task = new AsyncTask() {
+//            @Override
+//            protected Object doInBackground(Object[] objects) {
+//                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+//                mNoteId = (int) db.insert( NoteInfoEntry.TABLE_NAME, null, values );
+//                return null;
+//            }
+//        };
+//        task.execute();
     }
 
 
