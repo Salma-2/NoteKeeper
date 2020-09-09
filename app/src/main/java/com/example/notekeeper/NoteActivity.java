@@ -220,18 +220,20 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put( Notes.COLUMN_NOTE_TITLE, "" );
         values.put( Notes.COLUMN_NOTE_TEXT, "" );
 
-        mNoteUri = getContentResolver().insert( Notes.CONTENT_URI,values );
 
 
-//        AsyncTask task = new AsyncTask() {
-//            @Override
-//            protected Object doInBackground(Object[] objects) {
+                AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
 //                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 //                mNoteId = (int) db.insert( NoteInfoEntry.TABLE_NAME, null, values );
-//                return null;
-//            }
-//        };
-//        task.execute();
+                mNoteUri = getContentResolver().insert( Notes.CONTENT_URI,values );
+                return null;
+            }
+        };
+        task.execute();
+
+
     }
 
 
