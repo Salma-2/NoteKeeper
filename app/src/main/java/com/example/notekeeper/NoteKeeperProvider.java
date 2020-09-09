@@ -1,6 +1,7 @@
 package com.example.notekeeper;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -18,6 +19,7 @@ import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;
 
 
 public class NoteKeeperProvider extends ContentProvider {
+    public static final String MIME_VENDOR_TYPE = "vnd." + AUTHORITY;
     private NoteKeeperOpenHelper mDbOpenHelper;
     private static UriMatcher sUriMatcher = new UriMatcher( UriMatcher.NO_MATCH );
 
@@ -44,9 +46,29 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        throw new UnsupportedOperationException( "Not yet implemented" );
+        String mimeType = null;
+        int matcher = sUriMatcher.match( uri );
+
+        switch (matcher) {
+            case COURSES:
+                //vnd.android.cursor.dir/vnd.com.example.notekeeper.provider.courses
+                mimeType =
+                        ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + MIME_VENDOR_TYPE + "." + Courses.PATH;
+                break;
+            case NOTES:
+                mimeType =
+                        ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + MIME_VENDOR_TYPE + "." + Notes.PATH;
+                break;
+            case NOTES_EXPANDED:
+                mimeType =
+                        ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + MIME_VENDOR_TYPE + "." + Notes.PATH_EXPANDED;
+                break;
+            case NOTES_ROW:
+                mimeType =
+                        ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + MIME_VENDOR_TYPE + "." + Notes.PATH;
+                break;
+        }
+        return mimeType;
     }
 
     @Override
@@ -102,8 +124,8 @@ public class NoteKeeperProvider extends ContentProvider {
                 String rowSelection = NoteInfoEntry._ID + " = ? ";
                 String[] rowSelectionArgs = new String[]{Long.toString( rowId )};
                 //null for sort--> query for 1 specific row
-                cursor=db.query( NoteInfoEntry.TABLE_NAME,projection,rowSelection,rowSelectionArgs,
-                        null,null,null );
+                cursor = db.query( NoteInfoEntry.TABLE_NAME, projection, rowSelection, rowSelectionArgs,
+                        null, null, null );
                 break;
         }
         return cursor;
