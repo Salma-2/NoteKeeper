@@ -405,6 +405,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 CourseInfoEntry._ID};
         return new CursorLoader( this, uri, courseColumns, null, null,
                 CourseInfoEntry.COLUMN_COURSE_TITLE );
+
+
 //        return new CursorLoader( this ) {
 //            @Override
 //            public Cursor loadInBackground() {

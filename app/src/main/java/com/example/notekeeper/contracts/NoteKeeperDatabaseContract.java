@@ -3,7 +3,7 @@ package com.example.notekeeper.contracts;
 import android.provider.BaseColumns;
 
 //final --> m7dsh hy inherit mno
-public final class NoteKeeperDatabaseContract implements BaseColumns {
+public final class NoteKeeperDatabaseContract {
 
     // msh hna5od instance mno
     private NoteKeeperDatabaseContract() {
@@ -11,11 +11,11 @@ public final class NoteKeeperDatabaseContract implements BaseColumns {
     }
 
     // table #1 --> course info
-    public static final class CourseInfoEntry {
+    public static final class CourseInfoEntry implements BaseColumns{
         public static final String TABLE_NAME = "course_info";
         public static final String COLUMN_COURSE_ID = "course_id";
         public static final String COLUMN_COURSE_TITLE = "course_title";
-        public static final String _ID = BaseColumns._ID;
+
 
         public static final String getQName(String columnName) {
             return TABLE_NAME + "." + columnName;
@@ -38,12 +38,11 @@ public final class NoteKeeperDatabaseContract implements BaseColumns {
     }
 
     //table #2 --> note info
-    public static final class NoteInfoEntry {
+    public static final class NoteInfoEntry implements BaseColumns{
         public static final String TABLE_NAME = "note_info";
         public static final String COLUMN_COURSE_ID = "course_id";
         public static final String COLUMN_NOTE_TITLE = "note_title";
         public static final String COLUMN_NOTE_TEXT = "note_text";
-        public static final String _ID = BaseColumns._ID;
 
         //create index
         public static final String INDEX1 = TABLE_NAME + "_index1";
