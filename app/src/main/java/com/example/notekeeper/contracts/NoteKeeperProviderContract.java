@@ -26,12 +26,12 @@ public final class NoteKeeperProviderContract {
     public static final String AUTHORITY = "com.example.notekeeper.provider";
     public static final Uri AUTHORITY_URI = Uri.parse( "content://" + AUTHORITY );
 
-    public final static class Courses implements CourseIdColumn, CourseColumns {
+    public final static class Courses implements CourseIdColumn, CourseColumns, BaseColumns {
         public final static String PATH = "courses";
         public final static Uri CONTENT_URI = Uri.withAppendedPath( AUTHORITY_URI, PATH );
     }
 
-    public final static class Notes implements NoteColumns, CourseIdColumn {
+    public final static class Notes implements NoteColumns, CourseIdColumn, BaseColumns {
         public final static String PATH = "notes";
         public final static Uri CONTENT_URI = Uri.withAppendedPath( AUTHORITY_URI, PATH );
     }
