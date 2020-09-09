@@ -400,17 +400,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private CursorLoader createLoaderCourse() {
         mCourseQueryFinishid = false;
-        CursorLoader loader =null;
+        CursorLoader loader;
         Uri uri = Courses.CONTENT_URI;
         String[] courseColumns = {
                 Courses.COLUMN_COURSE_ID,
                 Courses.COLUMN_COURSE_TITLE,
                 Courses._ID};
-
         loader= new CursorLoader( this, uri, courseColumns, null, null,
                 Courses.COLUMN_COURSE_TITLE );
         return loader;
-
 //        return new CursorLoader( this ) {
 //            @Override
 //            public Cursor loadInBackground() {
