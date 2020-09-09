@@ -23,10 +23,12 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.example.notekeeper.contracts.NoteKeeperProviderContract;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
 
 import static com.example.notekeeper.contracts.NoteKeeperDatabaseContract.*;
+import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;
 
 public class NoteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public final static String NOTE_ID = "com.example.notekeeper.NOTE_POSITION";
@@ -398,14 +400,13 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private CursorLoader createLoaderCourse() {
         mCourseQueryFinishid = false;
-        Uri uri = Uri.parse( "content://com.example.notekeeper.provider" );
+        Uri uri = Courses.CONTENT_URI;
         String[] courseColumns = {
-                CourseInfoEntry.COLUMN_COURSE_ID,
-                CourseInfoEntry.COLUMN_COURSE_TITLE,
-                CourseInfoEntry._ID};
+                Courses.COLUMN_COURSE_ID,
+                Courses.COLUMN_COURSE_TITLE,
+                Courses._ID};
         return new CursorLoader( this, uri, courseColumns, null, null,
-                CourseInfoEntry.COLUMN_COURSE_TITLE );
-
+                Courses.COLUMN_COURSE_TITLE );
 
 //        return new CursorLoader( this ) {
 //            @Override
