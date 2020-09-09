@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
-import com.example.notekeeper.contracts.NoteKeeperProviderContract;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
 
@@ -40,8 +39,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             new NoteInfo( DataManager.getInstance().getCourses().get( 0 ), "", "" );
     private boolean mIsNewNote;
     private Spinner mSpinnerCourses;
-    private EditText mTitleCourses;
-    private EditText mTextCourses;
+    private EditText mTitleNote;
+    private EditText mTextNote;
     private int mNotePosition;
     private boolean mIsNoteCanceled;
     private NoteActivityViewModel mViewModel;
@@ -82,8 +81,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 //         loadCourseData();
         LoaderManager.getInstance( this ).initLoader( COURSE_LOADER, null, this );
 
-        mTitleCourses = findViewById( R.id.text_note_title );
-        mTextCourses = findViewById( R.id.text_note_text );
+        mTitleNote = findViewById( R.id.text_note_title );
+        mTextNote = findViewById( R.id.text_note_text );
 
 
         //get reference to ViewModelProvider "same steps every time"
@@ -174,8 +173,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteText = mNoteCursor.getString( mNoteTextIndex );
         int courseIndex = getIndexOfCourseId( courseId );
         mSpinnerCourses.setSelection( courseIndex );
-        mTitleCourses.setText( noteTitle );
-        mTextCourses.setText( noteText );
+        mTitleNote.setText( noteTitle );
+        mTextNote.setText( noteText );
     }
 
     private int getIndexOfCourseId(String courseId) {
@@ -265,7 +264,30 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             moveNext();
         }
 
+        switch (id){
+            case R.id.action_send_email:
+                sendEmail();
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+            case R.id.action_next:
+                moveNext();
+                break;
+            case R.id.action_set_reminder:
+                showReminderNotification();
+
+
+        }
+
         return super.onOptionsItemSelected( item );
+    }
+
+    private void showReminderNotification() {
+        String noteTitle = mTitleNote.getText().toString();
+        String noteText = mTextNote.getText().toString();
+        int noteId= (int)ContentUris.parseId( mNoteUri );
+        NoteReminderNotification.notify( this,noteTitle,noteText,noteId );
     }
 
     @Override
@@ -291,8 +313,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private void sendEmail() {
         CourseInfo course = (CourseInfo) mSpinnerCourses.getSelectedItem();
         String courseName = course.getTitle();
-        String subject = mTitleCourses.getText().toString();
-        String body = mTextCourses.getText().toString();
+        String subject = mTitleNote.getText().toString();
+        String body = mTextNote.getText().toString();
         String text =
                 "Checkout what I learned in Pluralsight course \"" + courseName + "\"\n" + body;
 
@@ -351,8 +373,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void saveNote() {
         String courseId = getCourseId();
-        String noteTitle = mTitleCourses.getText().toString();
-        String noteText = mTextCourses.getText().toString();
+        String noteTitle = mTitleNote.getText().toString();
+        String noteText = mTextNote.getText().toString();
         saveNoteToDatabase( courseId, noteTitle, noteText );
     }
 

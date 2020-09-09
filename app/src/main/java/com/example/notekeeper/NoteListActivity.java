@@ -74,6 +74,8 @@ public class NoteListActivity extends AppCompatActivity {
         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, null);
         recyclerNotes.setAdapter(mNoteRecyclerAdapter);
 
+
+
     }
 
 }
