@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -116,8 +118,19 @@ public class MainActivity extends AppCompatActivity
 //        mNoteRecyclerAdapter.notifyDataSetChanged();
 //        loadNotes();
         LoaderManager.getInstance( this ).restartLoader( NOTE_LOADER, null, this );
-
         updateHeader();
+        operDrawer();
+    }
+
+    private void operDrawer() {
+        Handler handler= new Handler( Looper.getMainLooper() );
+        handler.postDelayed( new Runnable() {
+            @Override
+            public void run() {
+                DrawerLayout drawerLayout = findViewById( R.id.drawer_layout );
+                drawerLayout.openDrawer( GravityCompat.START );
+            }
+        } ,1000);
     }
 
     private void loadNotes() {
