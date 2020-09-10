@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.notekeeper.NoteActivity;
+import com.example.notekeeper.activities.NoteActivity;
 import com.example.notekeeper.R;
 
 import static com.example.notekeeper.contracts.NoteKeeperDatabaseContract.*;

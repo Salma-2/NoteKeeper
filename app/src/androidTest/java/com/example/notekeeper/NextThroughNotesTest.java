@@ -9,6 +9,7 @@ import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
+import com.example.notekeeper.activities.MainActivity;
 import com.example.notekeeper.models.NoteInfo;
 
 import static androidx.test.espresso.Espresso.onView;

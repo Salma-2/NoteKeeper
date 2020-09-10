@@ -3,6 +3,7 @@ package com.example.notekeeper;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.example.notekeeper.activities.NoteListActivity;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
 

@@ -14,6 +14,9 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.notekeeper.activities.MainActivity;
+import com.example.notekeeper.activities.NoteActivity;
+
 /**
  * Helper class for showing and canceling note reminder
  * notifications.

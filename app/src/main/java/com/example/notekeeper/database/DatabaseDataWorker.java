@@ -1,4 +1,4 @@
-package com.example.notekeeper;
+package com.example.notekeeper.database;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package com.example.notekeeper;
+package com.example.notekeeper.activities;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -24,6 +24,11 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.example.notekeeper.DataManager;
+import com.example.notekeeper.NoteActivityViewModel;
+import com.example.notekeeper.NoteReminderNotification;
+import com.example.notekeeper.R;
+import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
 

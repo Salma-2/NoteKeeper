@@ -10,9 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.example.notekeeper.contracts.NoteKeeperDatabaseContract;
 import com.example.notekeeper.contracts.NoteKeeperDatabaseContract.CourseInfoEntry;
-import com.example.notekeeper.contracts.NoteKeeperProviderContract;
+import com.example.notekeeper.database.NoteKeeperOpenHelper;
 
 import static com.example.notekeeper.contracts.NoteKeeperDatabaseContract.*;
 import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;

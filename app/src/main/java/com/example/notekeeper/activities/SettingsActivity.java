@@ -1,10 +1,12 @@
-package com.example.notekeeper;
+package com.example.notekeeper.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.example.notekeeper.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

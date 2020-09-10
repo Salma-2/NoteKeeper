@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.notekeeper.contracts.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.notekeeper.contracts.NoteKeeperDatabaseContract.NoteInfoEntry;
+import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.ModuleInfo;
 import com.example.notekeeper.models.NoteInfo;

@@ -1,18 +1,22 @@
-package com.example.notekeeper;
+package com.example.notekeeper.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
+import com.example.notekeeper.BuildConfig;
+import com.example.notekeeper.DataManager;
+import com.example.notekeeper.R;
 import com.example.notekeeper.adapters.CourseRecyclerAdapter;
 import com.example.notekeeper.adapters.NoteRecyclerAdapter;
-import com.example.notekeeper.contracts.NoteKeeperProviderContract;
+import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        enableStrictMode();
+
+
         mOpenHelper = new NoteKeeperOpenHelper( this );
 
         Toolbar toolbar = findViewById( R.id.toolbar );
@@ -86,6 +93,14 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener( this );
 
         initializeDisplayContent();
+    }
+
+    private void enableStrictMode() {
+        if(BuildConfig.DEBUG){
+            StrictMode.ThreadPolicy policy =
+                    new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
+            StrictMode.setThreadPolicy( policy );
+        }
     }
 
     @Override

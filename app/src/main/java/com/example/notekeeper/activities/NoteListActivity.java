@@ -1,8 +1,10 @@
-package com.example.notekeeper;
+package com.example.notekeeper.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.notekeeper.DataManager;
+import com.example.notekeeper.R;
 import com.example.notekeeper.adapters.NoteRecyclerAdapter;
 import com.example.notekeeper.models.NoteInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,7 +25,7 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_list);
+        setContentView( R.layout.activity_note_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
