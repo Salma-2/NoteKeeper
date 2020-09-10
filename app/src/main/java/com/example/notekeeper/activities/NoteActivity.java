@@ -29,6 +29,7 @@ import android.widget.Spinner;
 
 import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteActivityViewModel;
+import com.example.notekeeper.NoteBackup;
 import com.example.notekeeper.NoteReminderNotification;
 import com.example.notekeeper.R;
 import com.example.notekeeper.database.NoteKeeperOpenHelper;
@@ -321,18 +322,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_send_email) {
-            sendEmail();
-            return true;
-        } else if (id == R.id.action_cancel) {
-            mIsNoteCanceled = true;
-            finish();
-            return true;
-        } else if (id == R.id.action_next) {
-            moveNext();
-        }
-
         switch (id) {
             case R.id.action_send_email:
                 sendEmail();
@@ -345,8 +334,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
             case R.id.action_set_reminder:
                 showReminderNotification();
-
-
+                break;
         }
 
         return super.onOptionsItemSelected( item );

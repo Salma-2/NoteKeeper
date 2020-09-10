@@ -13,9 +13,10 @@
         android:title="@android:string/cancel"
         app:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/action_set_reminder"
-        android:title="@string/set_reminder"
-        app:showAsAction="never" />
+    android:id="@+id/action_set_reminder"
+    android:title="@string/set_reminder"
+    app:showAsAction="never" />
+
     <item
         android:id="@+id/action_next"
         android:icon="@android:drawable/ic_media_next"

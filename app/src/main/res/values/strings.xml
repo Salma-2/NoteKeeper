@@ -61,5 +61,6 @@
 
     <string name="channel_name">NoteKeeper</string>
     <string name="channel_description">Keep your notes</string>
+    <string name="backup_notes">Backup Notes</string>
 
 </resources>
