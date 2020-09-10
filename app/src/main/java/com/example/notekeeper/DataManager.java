@@ -53,6 +53,7 @@ public class DataManager {
         final Cursor noteCursor = db.query( NoteInfoEntry.TABLE_NAME,
                 noteColumns,
                 null, null, null, null, noteOrderBy );
+        int x= noteCursor.getCount();
 
         loadNotesList( noteCursor );
     }
