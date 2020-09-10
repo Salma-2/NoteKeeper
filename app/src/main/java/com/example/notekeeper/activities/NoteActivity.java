@@ -18,6 +18,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;
 
 public class NoteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public final static String NOTE_ID = "com.example.notekeeper.NOTE_POSITION";
+    public final static String TAG = "NoteActivity";
     public static final int ID_NOT_SET = -1;
     public static final int NOTE_LOADER = 0;
     public static final int COURSE_LOADER = 1;
@@ -224,7 +226,28 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put( Notes.COLUMN_COURSE_ID, "" );
         values.put( Notes.COLUMN_NOTE_TITLE, "" );
         values.put( Notes.COLUMN_NOTE_TEXT, "" );
-        mNoteUri = getContentResolver().insert( Notes.CONTENT_URI, values );
+        AsyncTask<ContentValues ,Void , Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+            @Override
+            protected Uri doInBackground(ContentValues... contentValues) {
+
+                Log.d(TAG, "Call to doInBackground - thread: "+Thread.currentThread().getId());
+                ContentValues insertValues = contentValues[0];
+                 Uri rowUri = getContentResolver().insert( Notes.CONTENT_URI, values );
+                return rowUri;
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                Log.d(TAG, "Call to PostExecute - thread: "+Thread.currentThread().getId());
+                mNoteUri = uri;
+            }
+        };
+
+
+        Log.d(TAG, "Call to Exectue - thread: "+Thread.currentThread().getId());
+        task.execute( values );
+
+
 
 
 //                AsyncTask task = new AsyncTask() {
