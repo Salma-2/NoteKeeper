@@ -30,6 +30,7 @@ public class NoteUploaderJobService extends JobService {
 
 
                 mNoteUploader.doUpload( dataUri );
+                if(!mNoteUploader.isCanceled())
                 jobFinished( jobParameters, false );
 
                 return null;
@@ -48,6 +49,9 @@ public class NoteUploaderJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        return false;
+
+        mNoteUploader.cancel();
+        //reschedule
+        return true;
     }
 }
