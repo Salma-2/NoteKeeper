@@ -57,6 +57,12 @@ public class NoteReminderNotification {
 
         Intent noteActivityIntent = new Intent(context, NoteActivity.class);
         noteActivityIntent.putExtra(NoteActivity.NOTE_ID, noteId);
+
+        Intent backupNotesIntent = new Intent( context, NotesBackupService.class );
+        backupNotesIntent.putExtra( NotesBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES );
+
+
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                 CHANNEL_ID)
 
@@ -117,6 +123,14 @@ public class NoteReminderNotification {
                                 context,
                                 0,
                                 new Intent(context, MainActivity.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT))
+                .addAction(
+                        0,
+                        "Backup Notes",
+                        PendingIntent.getService(
+                                context,
+                                0,
+                              backupNotesIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
                 // Automatically dismiss the notification when it is touched.
