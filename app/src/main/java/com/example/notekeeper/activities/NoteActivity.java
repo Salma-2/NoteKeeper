@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.example.notekeeper.CourseEventBroadcastHelper;
 import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteActivityViewModel;
 import com.example.notekeeper.NoteBackup;
@@ -187,6 +188,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mSpinnerCourses.setSelection( courseIndex );
         mTitleNote.setText( noteTitle );
         mTextNote.setText( noteText );
+
+        CourseEventBroadcastHelper.sendEventBroadcast( this,courseId,"Editing Note" );
     }
 
     private int getIndexOfCourseId(String courseId) {
