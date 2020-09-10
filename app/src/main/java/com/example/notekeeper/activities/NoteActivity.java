@@ -21,7 +21,9 @@ import androidx.loader.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -32,6 +34,8 @@ import com.example.notekeeper.R;
 import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import static com.example.notekeeper.contracts.NoteKeeperDatabaseContract.*;
 import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;
@@ -226,29 +230,54 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put( Notes.COLUMN_COURSE_ID, "" );
         values.put( Notes.COLUMN_NOTE_TITLE, "" );
         values.put( Notes.COLUMN_NOTE_TEXT, "" );
-        AsyncTask<ContentValues ,Void , Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+        AsyncTask<ContentValues, Integer, Uri> task = new AsyncTask<ContentValues, Integer, Uri>() {
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                int progressValue = values[0];
+                mProgressBar.setProgress( progressValue );
+            }
+
+
+            private ProgressBar mProgressBar;
+
+            @Override
+            protected void onPreExecute() {
+                mProgressBar = (ProgressBar) findViewById( R.id.progress_bar );
+                mProgressBar.setProgress( 1 );
+                mProgressBar.setVisibility( View.VISIBLE );
+            }
+
             @Override
             protected Uri doInBackground(ContentValues... contentValues) {
 
-                Log.d(TAG, "Call to doInBackground - thread: "+Thread.currentThread().getId());
+                Log.d( TAG, "Call to doInBackground - thread: " + Thread.currentThread().getId() );
                 ContentValues insertValues = contentValues[0];
-                 Uri rowUri = getContentResolver().insert( Notes.CONTENT_URI, values );
+                Uri rowUri = getContentResolver().insert( Notes.CONTENT_URI, values );
+                simulateLongRunningWork();
+                publishProgress( 2 );
+//                    mProgressBar.setProgress( 2 );
+
+                simulateLongRunningWork();
+                publishProgress( 3 );
+//                mProgressBar.setProgress( 3 );
+
+
                 return rowUri;
             }
 
             @Override
             protected void onPostExecute(Uri uri) {
-                Log.d(TAG, "Call to PostExecute - thread: "+Thread.currentThread().getId());
+                Log.d( TAG, "Call to PostExecute - thread: " + Thread.currentThread().getId() );
+                displaySnackbar( uri.toString() );
                 mNoteUri = uri;
+                mProgressBar.setVisibility( View.GONE );
             }
         };
 
 
-        Log.d(TAG, "Call to Exectue - thread: "+Thread.currentThread().getId());
+        Log.d( TAG, "Call to Exectue - thread: " + Thread.currentThread().getId() );
         task.execute( values );
-
-
-
 
 //                AsyncTask task = new AsyncTask() {
 //            @Override
@@ -261,7 +290,19 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 //        };
 //        task.execute();
 
+    }
 
+
+    private void simulateLongRunningWork() {
+        try {
+            Thread.sleep( 2000 );
+        } catch (Exception ex) {
+        }
+    }
+
+    private void displaySnackbar(String message) {
+        View view = findViewById( R.id.spinner_courses );
+        Snackbar.make( view, message, Snackbar.LENGTH_LONG ).show();
     }
 
 
@@ -292,7 +333,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             moveNext();
         }
 
-        switch (id){
+        switch (id) {
             case R.id.action_send_email:
                 sendEmail();
                 break;
@@ -314,8 +355,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private void showReminderNotification() {
         String noteTitle = mTitleNote.getText().toString();
         String noteText = mTextNote.getText().toString();
-        int noteId= (int)ContentUris.parseId( mNoteUri );
-        NoteReminderNotification.notify( this,noteTitle,noteText,noteId );
+        int noteId = (int) ContentUris.parseId( mNoteUri );
+        NoteReminderNotification.notify( this, noteTitle, noteText, noteId );
     }
 
     @Override
