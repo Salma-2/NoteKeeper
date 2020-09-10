@@ -1,12 +1,17 @@
 package com.example.notekeeper.activities;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 import com.example.notekeeper.BuildConfig;
 import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteBackup;
+import com.example.notekeeper.NoteUploaderJobService;
 import com.example.notekeeper.NotesBackupService;
 import com.example.notekeeper.R;
 import com.example.notekeeper.adapters.CourseRecyclerAdapter;
@@ -28,6 +34,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.loader.app.LoaderManager;
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     public static final int NOTE_LOADER = 0;
+    public static final int NOTE_UPLOADER_JOB_ID = 1;
     private AppBarConfiguration mAppBarConfiguration;
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerNotes;
@@ -100,7 +108,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void enableStrictMode() {
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             StrictMode.ThreadPolicy policy =
                     new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build();
             StrictMode.setThreadPolicy( policy );
@@ -125,14 +133,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void operDrawer() {
-        Handler handler= new Handler( Looper.getMainLooper() );
+        Handler handler = new Handler( Looper.getMainLooper() );
         handler.postDelayed( new Runnable() {
             @Override
             public void run() {
                 DrawerLayout drawerLayout = findViewById( R.id.drawer_layout );
                 drawerLayout.openDrawer( GravityCompat.START );
             }
-        } ,1000);
+        }, 1000 );
     }
 
     private void loadNotes() {
@@ -233,22 +241,62 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity( new Intent( this, SettingsActivity.class ) );
-        }
-        else if(id == R.id.action_backup_note){
+        switch (id) {
+            case R.id.action_settings:
+                startActivity( new Intent( this, SettingsActivity.class ) );
+                break;
+            case R.id.action_backup_note:
                 backupNotes();
+                break;
+            case R.id.action_upload_note:
+                scheduleNoteUploader();
+                break;
+
+
         }
         return super.onOptionsItemSelected( item );
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void scheduleNoteUploader() {
+
+        /*
+        step1 : build job info
+                *id
+                *componentName
+                *add criteria
+                *add extras
+                *build
+         step2:
+          schedule
+          jobScheduler us systemSercive --> getSystemService(name)
+          schedule
+         */
+
+        PersistableBundle extras = new PersistableBundle();
+        extras.putString( NoteUploaderJobService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES );
+        ComponentName componentName = new ComponentName( this, NoteUploaderJobService.class );
+        JobInfo jobInfo =
+                new JobInfo.Builder( NOTE_UPLOADER_JOB_ID, componentName ).
+                        setRequiredNetworkType( JobInfo.NETWORK_TYPE_ANY ).
+                        setExtras( extras ).
+                        build();
+
+        JobScheduler jobScheduler = (JobScheduler) this.getSystemService( JOB_SCHEDULER_SERVICE );
+        jobScheduler.schedule( jobInfo );
+
+
     }
 
 
     private void backupNotes() {
-        Intent intent= new Intent( this, NotesBackupService.class );
-        intent.putExtra( NotesBackupService.EXTRA_COURSE_ID,NoteBackup.ALL_COURSES );
+        Intent intent = new Intent( this, NotesBackupService.class );
+        intent.putExtra( NotesBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES );
         startService( intent );
     }
 
