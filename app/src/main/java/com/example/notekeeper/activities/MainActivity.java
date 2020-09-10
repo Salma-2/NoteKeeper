@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.notekeeper.BuildConfig;
 import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteBackup;
+import com.example.notekeeper.NotesBackupService;
 import com.example.notekeeper.R;
 import com.example.notekeeper.adapters.CourseRecyclerAdapter;
 import com.example.notekeeper.adapters.NoteRecyclerAdapter;
@@ -246,8 +247,9 @@ public class MainActivity extends AppCompatActivity
 
 
     private void backupNotes() {
-        NoteBackup.doBackup( MainActivity.this,NoteBackup.ALL_COURSES );
-
+        Intent intent= new Intent( this, NotesBackupService.class );
+        intent.putExtra( NotesBackupService.EXTRA_COURSE_ID,NoteBackup.ALL_COURSES );
+        startService( intent );
     }
 
 

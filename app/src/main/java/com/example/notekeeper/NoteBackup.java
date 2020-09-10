@@ -29,33 +29,31 @@ public class NoteBackup {
         Cursor cursor = context.getContentResolver().query( Notes.CONTENT_URI, projection,
                 selcetion, selectionArgs, null );
 
+
+        int count = cursor.getCount();
         int courseIdIndex = cursor.getColumnIndex( Notes.COLUMN_COURSE_ID );
         int noteTitleIndex = cursor.getColumnIndex( Notes.COLUMN_NOTE_TITLE );
         int noteTextIndex = cursor.getColumnIndex( Notes.COLUMN_NOTE_TEXT );
         cursor.moveToFirst();
 
-        Log.i( TAG, "************ BACKUP START- thread " + Thread.currentThread().getId() +
-                "************ " );
+        Log.i(TAG, ">>>***   BACKUP START - Thread: " + Thread.currentThread().getId() + "   ***<<<");
         while (cursor.moveToNext()) {
             String courseId = cursor.getString( courseIdIndex );
             String noteTitle = cursor.getString( noteTitleIndex );
             String noteText = cursor.getString( noteTextIndex );
             if (noteTitle != null) {
-                Log.i( TAG,
-                        "Course ID: " + courseId +
-                                " Note Title: " + noteTitle +
-                                " Note Text: " + noteText + "\n" );
+                Log.i(TAG, ">>>Backing Up Note<<< " + courseId + "|" + noteTitle + "|" + noteText);
                 simulateLongRunningWork();
             }
         }
-        Log.i( TAG, "************ BACKUP END ************ " );
-
+        Log.i(TAG, ">>>***   BACKUP COMPLETE   ***<<<");
+        cursor.close();
 
     }
 
     private static void simulateLongRunningWork() {
         try {
-            Thread.sleep( 2000 );
+            Thread.sleep( 1000 );
         } catch (Exception ex) {
         }
     }
