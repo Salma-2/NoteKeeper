@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
          */
 
         PersistableBundle extras = new PersistableBundle();
-        extras.putString( NoteUploaderJobService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES );
+        extras.putString( NoteUploaderJobService.EXTRA_DATA_URI, Notes.CONTENT_URI.toString() );
         ComponentName componentName = new ComponentName( this, NoteUploaderJobService.class );
         JobInfo jobInfo =
                 new JobInfo.Builder( NOTE_UPLOADER_JOB_ID, componentName ).

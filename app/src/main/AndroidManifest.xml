@@ -13,7 +13,7 @@
             android:name=".NoteUploaderJobService"
             android:enabled="true"
             android:exported="false"
-            android:permission="android:permission.BIND_JOB_SERVICE"></service>
+            android:permission="android.permission.BIND_JOB_SERVICE"></service>
         <service
             android:name=".NotesBackupService"
             android:exported="false" />
