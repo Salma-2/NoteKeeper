@@ -1,4 +1,4 @@
-package com.example.notekeeper;
+package com.example.notekeeper.service;
 
 import android.app.Service;
 import android.app.job.JobParameters;
@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.RequiresApi;
+
+import com.example.notekeeper.NoteUploader;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class NoteUploaderJobService extends JobService {

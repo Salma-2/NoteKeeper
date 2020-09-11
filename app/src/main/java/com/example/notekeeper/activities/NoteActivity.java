@@ -33,14 +33,11 @@ import android.widget.Spinner;
 import com.example.notekeeper.CourseEventBroadcastHelper;
 import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteActivityViewModel;
-import com.example.notekeeper.NoteBackup;
-import com.example.notekeeper.NoteReminderNotification;
-import com.example.notekeeper.NoteReminderReceiver;
+import com.example.notekeeper.notifications.NoteReminderReceiver;
 import com.example.notekeeper.R;
 import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
 import com.example.notekeeper.models.NoteInfo;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import static com.example.notekeeper.contracts.NoteKeeperDatabaseContract.*;

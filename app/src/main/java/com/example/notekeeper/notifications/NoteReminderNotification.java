@@ -1,4 +1,4 @@
-package com.example.notekeeper;
+package com.example.notekeeper.notifications;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -14,6 +14,9 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.notekeeper.NoteBackup;
+import com.example.notekeeper.service.NotesBackupService;
+import com.example.notekeeper.R;
 import com.example.notekeeper.activities.MainActivity;
 import com.example.notekeeper.activities.NoteActivity;
 

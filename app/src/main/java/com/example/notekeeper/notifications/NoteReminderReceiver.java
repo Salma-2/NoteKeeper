@@ -1,4 +1,4 @@
-package com.example.notekeeper;
+package com.example.notekeeper.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
