@@ -1,5 +1,7 @@
 package com.example.notekeeper.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +35,7 @@ import com.example.notekeeper.DataManager;
 import com.example.notekeeper.NoteActivityViewModel;
 import com.example.notekeeper.NoteBackup;
 import com.example.notekeeper.NoteReminderNotification;
+import com.example.notekeeper.NoteReminderReceiver;
 import com.example.notekeeper.R;
 import com.example.notekeeper.database.NoteKeeperOpenHelper;
 import com.example.notekeeper.models.CourseInfo;
@@ -189,7 +193,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mTitleNote.setText( noteTitle );
         mTextNote.setText( noteText );
 
-        CourseEventBroadcastHelper.sendEventBroadcast( this,courseId,"Editing Note" );
+        CourseEventBroadcastHelper.sendEventBroadcast( this, courseId, "Editing Note" );
     }
 
     private int getIndexOfCourseId(String courseId) {
@@ -347,7 +351,23 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteTitle = mTitleNote.getText().toString();
         String noteText = mTextNote.getText().toString();
         int noteId = (int) ContentUris.parseId( mNoteUri );
-        NoteReminderNotification.notify( this, noteTitle, noteText, noteId );
+
+        Intent intent = new Intent( this, NoteReminderReceiver.class );
+        intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_ID, noteId );
+        intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle );
+        intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast( this,0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT );
+
+        AlarmManager alarmManager = (AlarmManager)this.getSystemService( ALARM_SERVICE );
+        int currentTimeInMilliSeconds= (int) SystemClock.elapsedRealtime();
+        int ONE_HOUR = 60* 60* 1000;
+        int TEN_SECONDS = 10*1000;
+        int alarmTime = TEN_SECONDS + currentTimeInMilliSeconds;
+        alarmManager.set( AlarmManager.ELAPSED_REALTIME,alarmTime, pendingIntent );
+
+
+
     }
 
     @Override
