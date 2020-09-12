@@ -81,5 +81,8 @@
         app:layout_constraintEnd_toStartOf="@+id/progress_bar"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/text_note_title"
-        app:layout_constraintTop_toBottomOf="@+id/text_note_title" />
+        app:layout_constraintTop_toBottomOf="@+id/text_note_title"
+        app:outlineColor="@color/pluralsight_orange"
+        app:outlineWidth="5dp"
+        app:shape="circle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
