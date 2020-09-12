@@ -10,17 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".NoteReminderReceiver"
+            android:name=".notifications.NoteReminderReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
 
         <service
-            android:name=".NoteUploaderJobService"
+            android:name=".service.NoteUploaderJobService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".NotesBackupService"
+            android:name=".service.NotesBackupService"
             android:exported="false" />
 
         <provider
