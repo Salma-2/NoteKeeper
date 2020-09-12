@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -16,6 +17,7 @@ import android.view.View;
  */
 public class ModuleStatusView extends View {
     public static final int EDIT_MODE_MODULE_COUNT = 7;
+    public static final int INVALID_INDEX = -1;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -156,7 +158,7 @@ public class ModuleStatusView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        setUpModuleRectangle(w);
+        setUpModuleRectangle( w );
     }
 
     @Override
@@ -178,4 +180,37 @@ public class ModuleStatusView extends View {
     }
 
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+            case MotionEvent.ACTION_UP:
+                int moduleIndex = findItemAtPoint( event.getX(), event.getY() );
+                onModuleSelected(moduleIndex);
+
+        }
+        return super.onTouchEvent( event );
+    }
+
+    private void onModuleSelected(int moduleIndex) {
+        if (moduleIndex== INVALID_INDEX)
+            return;
+
+        else {
+            mModuleStatus[moduleIndex]= !mModuleStatus[moduleIndex];
+            invalidate();
+        }
+    }
+
+    private int findItemAtPoint(float x, float y) {
+        int moduleIndex = INVALID_INDEX;
+        for (int iModuleIndex = 0; iModuleIndex < mModuleRectangles.length; iModuleIndex++) {
+            if (mModuleRectangles[iModuleIndex].contains( (int) x, (int) y )){
+                moduleIndex= iModuleIndex;
+                break;
+            }
+        }
+        return moduleIndex;
+    }
 }

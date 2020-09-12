@@ -31,6 +31,7 @@ import android.widget.Spinner;
 
 import com.example.notekeeper.CourseEventBroadcastHelper;
 import com.example.notekeeper.DataManager;
+import com.example.notekeeper.ModuleStatusView;
 import com.example.notekeeper.NoteActivityViewModel;
 import com.example.notekeeper.notifications.NoteReminderReceiver;
 import com.example.notekeeper.R;
@@ -75,6 +76,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean mNotesQueryFinishid;
     private boolean mCourseQueryFinishid;
     private Uri mNoteUri;
+    private ModuleStatusView mModuleStatusView;
 
 
     @Override
@@ -104,6 +106,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mTitleNote = findViewById( R.id.text_note_title );
         mTextNote = findViewById( R.id.text_note_text );
+        mModuleStatusView = (ModuleStatusView) findViewById( R.id.module_status );
+        loadModuleStatusValues();
 
 
         //get reference to ViewModelProvider "same steps every time"
@@ -129,6 +133,16 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 //            loadNoteData();
             LoaderManager.getInstance( this ).initLoader( NOTE_LOADER, null, this );
         }
+    }
+
+    private void loadModuleStatusValues() {
+        int totalNumberOfModules = 11;
+        int completedNumberOfModules = 7;
+        boolean[] moduleStatus = new boolean[totalNumberOfModules];
+        for (int x= 0;x<completedNumberOfModules;x++){
+            moduleStatus[x] = true;
+        }
+        mModuleStatusView.setModuleStatus( moduleStatus );
     }
 
     private void loadCourseData() {
