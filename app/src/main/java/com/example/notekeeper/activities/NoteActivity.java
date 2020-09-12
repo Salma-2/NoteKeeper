@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -45,6 +44,14 @@ import static com.example.notekeeper.contracts.NoteKeeperProviderContract.*;
 
 public class NoteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public final static String NOTE_ID = "com.example.notekeeper.NOTE_POSITION";
+    public static final String ORIGINAL_NOTE_COURSE_ID = "com.example.notekeeper.ORIGINAL_NOTE_COURSE_ID";
+    public static final String ORIGINAL_NOTE_TITLE = "com.example.notekeeper.ORIGINAL_NOTE_TITLE";
+    public static final String ORIGINAL_NOTE_TEXT = "com.example.notekeeper.ORIGINAL_NOTE_TEXT";
+    public static final String NOTE_URI = "com.jwhh.jim.notekeeper.NOTE_URI";
+    private String mOriginalNoteCourseId;
+    private String mOriginalNoteTitle;
+    private String mOriginalNoteText;
+
     public final static String TAG = "NoteActivity";
     public static final int ID_NOT_SET = -1;
     public static final int NOTE_LOADER = 0;
@@ -100,22 +107,22 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         //get reference to ViewModelProvider "same steps every time"
-        ViewModelProvider viewModelProvider = new ViewModelProvider( getViewModelStore(),
-                ViewModelProvider.AndroidViewModelFactory.getInstance( getApplication() ) );
-        mViewModel = viewModelProvider.get( NoteActivityViewModel.class );
-
-        if (mViewModel.isNewlyCreated && savedInstanceState != null) {
-            mViewModel.restoreState( savedInstanceState );
-        }
-
-        mViewModel.isNewlyCreated = false;
+//        ViewModelProvider viewModelProvider = new ViewModelProvider( getViewModelStore(),
+//                ViewModelProvider.AndroidViewModelFactory.getInstance( getApplication() ) );
+//        mViewModel = viewModelProvider.get( NoteActivityViewModel.class );
+//
+//        if (mViewModel.isNewlyCreated && savedInstanceState != null) {
+//            mViewModel.restoreState( savedInstanceState );
+//        }
+//
+//        mViewModel.isNewlyCreated = false;
 
 
         readDisplayStateValues();
         if (savedInstanceState == null)
-            storeOriginalValues();
+            saveOriginalValues();
         else {
-            restoreOriginalValues();
+            restoreOriginalValues(savedInstanceState);
         }
 
         if (!mIsNewNote) {
@@ -353,16 +360,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_ID, noteId );
         intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle );
         intent.putExtra( NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText );
-        PendingIntent pendingIntent = PendingIntent.getBroadcast( this,0, intent,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT );
 
-        AlarmManager alarmManager = (AlarmManager)this.getSystemService( ALARM_SERVICE );
-        int currentTimeInMilliSeconds= (int) SystemClock.elapsedRealtime();
-        int ONE_HOUR = 60* 60* 1000;
-        int TEN_SECONDS = 10*1000;
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService( ALARM_SERVICE );
+        int currentTimeInMilliSeconds = (int) SystemClock.elapsedRealtime();
+        int ONE_HOUR = 60 * 60 * 1000;
+        int TEN_SECONDS = 10 * 1000;
         int alarmTime = TEN_SECONDS + currentTimeInMilliSeconds;
-        alarmManager.set( AlarmManager.ELAPSED_REALTIME,alarmTime, pendingIntent );
-
+        alarmManager.set( AlarmManager.ELAPSED_REALTIME, alarmTime, pendingIntent );
 
 
     }
@@ -381,7 +387,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         saveNote();
         ++mNoteId;
         mNote = DataManager.getInstance().getNotes().get( mNoteId );
-        storeOriginalValues();
+        saveOriginalValues();
         displayNote();
         invalidateOptionsMenu();
     }
@@ -410,7 +416,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             if (mIsNewNote) {
                 deleteNotefromDatabase();
             } else {
-                restoreOriginalValues();
+               storePreviousNoteValues();
             }
         } else {
             saveNote();
@@ -434,18 +440,35 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    private void restoreOriginalValues() {
-        mNote.setCourse( DataManager.getInstance().getCourse( mViewModel.mOriginalCourseId ) );
-        mNote.setTitle( mViewModel.mOriginalCourseTitle );
-        mNote.setText( mViewModel.mMOriginalCourseText );
+    private void restoreOriginalValues(Bundle savedInstanceState) {
+//        mNote.setCourse( DataManager.getInstance().getCourse( mViewModel.mOriginalCourseId ) );
+//        mNote.setTitle( mViewModel.mOriginalCourseTitle );
+//        mNote.setText( mViewModel.mMOriginalCourseText );
+
+        mOriginalNoteCourseId = savedInstanceState.getString(ORIGINAL_NOTE_COURSE_ID);
+        mOriginalNoteTitle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE);
+        mOriginalNoteText = savedInstanceState.getString(ORIGINAL_NOTE_TEXT);
+        String noteUri = savedInstanceState.getString( NOTE_URI );
+        mNoteUri = Uri.parse( noteUri );
     }
 
-    private void storeOriginalValues() {
+    private void saveOriginalValues() {
         if (mIsNewNote)
             return;
-        mViewModel.mOriginalCourseId = mNote.getCourse().getCourseId();
-        mViewModel.mOriginalCourseTitle = mNote.getTitle();
-        mViewModel.mMOriginalCourseText = mNote.getText();
+//        mViewModel.mOriginalCourseId = mNote.getCourse().getCourseId();
+//        mViewModel.mOriginalCourseTitle = mNote.getTitle();
+//        mViewModel.mMOriginalCourseText = mNote.getText();
+
+        mOriginalNoteCourseId = mNote.getCourse().getCourseId();
+        mOriginalNoteTitle = mNote.getTitle();
+        mOriginalNoteText = mNote.getText();
+    }
+
+    private void storePreviousNoteValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(mOriginalNoteCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(mOriginalNoteTitle);
+        mNote.setText(mOriginalNoteText);
     }
 
     private void saveNote() {
@@ -464,15 +487,17 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put( NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle );
         values.put( NoteInfoEntry.COLUMN_NOTE_TEXT, noteText );
 
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-                db.update( NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs );
-                return null;
-            }
-        };
-        task.execute();
+        getContentResolver().update( mNoteUri, values, selection, selectionArgs );
+
+//        AsyncTask task = new AsyncTask() {
+//            @Override
+//            protected Object doInBackground(Object[] objects) {
+//                SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+//                db.update( NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs );
+//                return null;
+//            }
+//        };
+//        task.execute();
     }
 
     private String getCourseId() {
@@ -486,9 +511,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState( outState );
-        if (outState != null) {
-            mViewModel.saveState( outState );
-        }
+        outState.putString( ORIGINAL_NOTE_COURSE_ID, mOriginalNoteCourseId );
+        outState.putString( ORIGINAL_NOTE_TITLE, mOriginalNoteTitle );
+        outState.putString( ORIGINAL_NOTE_TEXT, mOriginalNoteText );
+        outState.putString( NOTE_URI,mNoteUri.toString() );
+
+//        if (outState != null) {
+//            mViewModel.saveState( outState );
+//        }
     }
 
 
@@ -579,7 +609,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mCourseIdIndex = mNoteCursor.getColumnIndex( NoteInfoEntry.COLUMN_COURSE_ID );
         mNoteTitleIndex = mNoteCursor.getColumnIndex( NoteInfoEntry.COLUMN_NOTE_TITLE );
         mNoteTextIndex = mNoteCursor.getColumnIndex( NoteInfoEntry.COLUMN_NOTE_TEXT );
-        mNoteCursor.moveToNext();
+        mNoteCursor.moveToFirst();
         mNotesQueryFinishid = true;
         displayNotesWhenQueriesFinished();
     }
