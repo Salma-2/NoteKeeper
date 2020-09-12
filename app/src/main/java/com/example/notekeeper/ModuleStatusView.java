@@ -95,7 +95,7 @@ public class ModuleStatusView extends View {
 
         boolean[] exampleModuleValues = new boolean[EDIT_MODE_MODULE_COUNT];
         int middle = EDIT_MODE_MODULE_COUNT / 2;
-        for (int x = 0; x < middle; x++){
+        for (int x = 0; x < middle; x++) {
             exampleModuleValues[x] = true;
         }
         setModuleStatus( exampleModuleValues );
@@ -111,6 +111,23 @@ public class ModuleStatusView extends View {
         }
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int desiredWidth = 0;
+        int desiredHeight = 0;
+
+        desiredWidth = (int) ((mModuleStatus.length * (mShapeSize + mSpacing)) - mSpacing);
+        desiredHeight += getPaddingLeft() + getPaddingRight();
+
+        desiredHeight = (int) (mShapeSize);
+        desiredHeight += getPaddingBottom() + getPaddingTop();
+
+        int width = resolveSizeAndState( desiredWidth, widthMeasureSpec,0 );
+        int height = resolveSizeAndState( desiredHeight,heightMeasureSpec,0 );
+
+        setMeasuredDimension( width,height );
+
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
