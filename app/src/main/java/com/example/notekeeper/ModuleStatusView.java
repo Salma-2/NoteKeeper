@@ -126,7 +126,6 @@ public class ModuleStatusView extends View {
         int height = resolveSizeAndState( desiredHeight,heightMeasureSpec,0 );
 
         setMeasuredDimension( width,height );
-
     }
 
     @Override
